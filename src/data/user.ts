@@ -24,8 +24,8 @@ export interface UserProfile {
 }
 
 export const defaultUser: UserProfile = {
-  name: "Rahul Sharma",
-  email: "rahul.sharma@email.com",
+  name: "Manideep",
+  email: "manideep1145@email.com",
   phone: "+91 98765 43210",
   avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
   addresses: [
