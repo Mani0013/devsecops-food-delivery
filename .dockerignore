@@ -1,0 +1,21 @@
+# Ignore node_modules and build artifacts
+node_modules
+dist
+.git
+.gitignore
+.env*
+coverage
+*.log
+
+# Editor/IDE files
+.idea
+.vscode
+*.swp
+*.swo
+
+# macOS junk
+.DS_Store
+
+# Testing/temp
+__tests__
+temp
