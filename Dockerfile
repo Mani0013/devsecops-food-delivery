@@ -18,9 +18,6 @@ RUN npm run build
 # Stage 2: Serve static files with Nginx
 FROM nginxinc/nginx-unprivileged:1.27-alpine-slim
 
-# Remove default nginx index.html
-RUN rm -rf /usr/share/nginx/html/*
-
 # Copy built artifacts from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
