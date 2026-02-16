@@ -15,8 +15,8 @@ COPY . .
 # Build for production
 RUN npm run build
 
-# Stage 2: Serve static files with Nginx
-FROM nginxinc/nginx-unprivileged:1.27-alpine-slim
+# Stage 2: Serve static files with nginx from distroless
+FROM nginxinc/nginx-unprivileged:1.27-distroless
 
 # Copy built artifacts from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
