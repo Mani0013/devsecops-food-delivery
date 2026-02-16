@@ -3,22 +3,21 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copying package files first for better caching
+# Copy package files first for caching
 COPY package*.json ./
-
-# Install all dependencies
 RUN npm ci
 
-# Copy the rest of the application code
+# Copy source and build
 COPY . .
-
-# Build for production
 RUN npm run build
 
-# Stage 2: Serve static files with non-root nginx (slim alpine base)
-FROM nginxinc/nginx-unprivileged:1.27-alpine-slim
+# Stage 2: Serve with Nginx (original alpine base)
+FROM nginx:alpine
 
-# Copy built artifacts from builder stage
+# Remove default nginx files
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy built static files from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Expose port 80
