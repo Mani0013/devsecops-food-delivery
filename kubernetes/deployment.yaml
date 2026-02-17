@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freshbite
+  labels:
+    app: freshbite
+spec:
+  replicas: 2                  # 2 pods for demo
+  selector:
+    matchLabels:
+      app: freshbite
+  template:
+    metadata:
+      labels:
+        app: freshbite
+    spec:
+      containers:
+      - name: freshbite
+        image: manideep003/freshbite:latest   # Docker Hub image (latest tag)
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"

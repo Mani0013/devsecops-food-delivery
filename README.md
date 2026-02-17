@@ -65,13 +65,15 @@ Automated on push/PR to main:
 2. **Base image vulnerabilities** (high CVE in libpng from nginx:alpine)  
    → Evaluated risk (static serving → no exploit path) → accepted for project scope while keeping simple, lightweight base. (Explored distroless/slim variants but reverted to stable alpine for minimal changes.)
 
-## Phase 4 – Kubernetes Manifests & Local Testing (In Progress)
-- Deployment & Service manifests created
-- Tested locally with Minikube
-- Ready for Argo CD GitOps to AWS EKS
+## Phase 4 – Kubernetes Manifests & Local Testing
 
-![Minikube Deployment](assets/images/minikube-pods.png)
-![App via Minikube](assets/images/app-minikube.png)
+- Created `deployment.yaml` (2 replicas) and `service.yaml` (NodePort)
+- Tested locally with Minikube
+- App successfully running at Minikube service URL
+
+![Minikube Pods & Service](assets/images/minikube-pods.png)
+![App Running in Minikube](assets/images/app-in-minikube.png)
+![Minikube Dashboard](assets/images/minikube-dashboard-pods.png)
 
 ## Next Phases
 - Phase 5: Argo CD GitOps deployment to EKS
