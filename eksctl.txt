@@ -1,0 +1,11 @@
+eksctl create cluster2 `
+  --name freshbite-cluster `
+  --region ap-south-1 `
+  --version 1.30 `
+  --nodegroup-name workers `
+  --node-type t3.micro `
+  --nodes 2 `
+  --nodes-min 1 `
+  --nodes-max 2 `
+  --managed `
+  --timeout 60m
