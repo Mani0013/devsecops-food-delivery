@@ -65,6 +65,10 @@ Automated on push/PR to main:
 2. **Base image vulnerabilities** (high CVE in libpng from nginx:alpine)  
    → Evaluated risk (static serving → no exploit path) → accepted for project scope while keeping simple, lightweight base. (Explored distroless/slim variants but reverted to stable alpine for minimal changes.)
 
+3. **EKS cluster creation timeout & resource constraints** (nodegroup CloudFormation timeout, pods Pending on t3.small nodes)  
+   → Increased eksctl timeout to 90m → started with 1 node & scaled to 2 when needed → lowered Argo CD pod resources via kubectl edit → pods scheduled successfully.
+
+
 ## Phase 4 – Kubernetes Manifests & Local Testing
 
 - Created `deployment.yaml` (2 replicas) and `service.yaml` (NodePort)
@@ -75,8 +79,20 @@ Automated on push/PR to main:
 ![App Running in Minikube](assets/images/app-in-minikube.png)
 ![Minikube Dashboard](assets/images/minikube-dashboard-pods.png)
 
+## Phase 5 – GitOps with Argo CD on AWS EKS
+
+- Created minimal EKS cluster with eksctl (t3.small nodes, ap-south-1)
+- Installed Argo CD in-cluster
+- Created Application synced to GitHub kubernetes/ path
+- Auto-sync enabled → push change → Argo deploys to EKS
+
+![EKS Cluster Nodes](assets/images/eks-nodes.png)
+![Argo CD Dashboard](assets/images/argo-dashboard.png)
+![freshbite-app Synced in Argo](assets/images/argo-app-synced.png)
+![FreshBite Live on EKS Public URL](assets/images/app-eks-public.png)
+![FreshBite Live on EKS Public URL](assets/images/app-eks-public-2.png)
+![App Pods Running on EKS](assets/images/eks-pods-running.png)
 ## Next Phases
-- Phase 5: Argo CD GitOps deployment to EKS
 - Phase 6: Prometheus + Grafana monitoring
 - Phase 7: Cost cleanup scripts, final architecture diagram, demo video
 
