@@ -5,7 +5,7 @@ metadata:
   labels:
     app: freshbite
 spec:
-  replicas: 2                  # 2 pods for demo
+  replicas: 1                  
   selector:
     matchLabels:
       app: freshbite
