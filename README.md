@@ -11,7 +11,7 @@ Built with:
 - **Containerization**: Multi-stage Dockerfile (Node build → Nginx serve)
 - **Orchestration**: Kubernetes manifests + local Minikube testing
 - **GitOps**: Argo CD for declarative deployments to AWS EKS
-- **Monitoring**: Prometheus + Grafana (planned)
+- **Monitoring**: Prometheus + Grafana (implemented)
 - **Security**: Zero high/critical npm vulnerabilities after remediation; base image risk accepted
 
 ![FreshBite App Home](assets/images/app-local.png)
@@ -25,7 +25,6 @@ Built with:
 - Cleaned Lovable.dev export
 - Verified production build: `npm run build && npm run preview`
 - Pushed to GitHub: https://github.com/Mani0013/devsecops-food-delivery
-
 
 ## Phase 2 – Containerization
 - Multi-stage Dockerfile: Node 20-alpine (build) → nginx:alpine (runtime)
@@ -58,19 +57,7 @@ Automated on push/PR to main:
 
 ![Docker Scout - 1 High](assets/images/docker-scout-1-high.png)
 
-## Challenges & Solutions
-1. **SonarCloud scan failure** ("missing sonar.projectKey / organization")  
-   → Added `sonar-project.properties` file with correct keys → disabled Automatic Analysis in SonarCloud UI → scans passed consistently.
-
-2. **Base image vulnerabilities** (high CVE in libpng from nginx:alpine)  
-   → Evaluated risk (static serving → no exploit path) → accepted for project scope while keeping simple, lightweight base. (Explored distroless/slim variants but reverted to stable alpine for minimal changes.)
-
-3. **EKS cluster creation timeout & resource constraints** (nodegroup CloudFormation timeout, pods Pending on t3.small nodes)  
-   → Increased eksctl timeout to 90m → started with 1 node & scaled to 2 when needed → lowered Argo CD pod resources via kubectl edit → pods scheduled successfully.
-
-
 ## Phase 4 – Kubernetes Manifests & Local Testing
-
 - Created `deployment.yaml` (2 replicas) and `service.yaml` (NodePort)
 - Tested locally with Minikube
 - App successfully running at Minikube service URL
@@ -80,7 +67,6 @@ Automated on push/PR to main:
 ![Minikube Dashboard](assets/images/minikube-dashboard-pods.png)
 
 ## Phase 5 – GitOps with Argo CD on AWS EKS
-
 - Created minimal EKS cluster with eksctl (t3.small nodes, ap-south-1)
 - Installed Argo CD in-cluster
 - Created Application synced to GitHub kubernetes/ path
@@ -89,12 +75,20 @@ Automated on push/PR to main:
 ![EKS Cluster Nodes](assets/images/eks-nodes.png)
 ![Argo CD Dashboard](assets/images/argo-dashboard.png)
 ![freshbite-app Synced in Argo](assets/images/argo-app-synced.png)
+![Argo Resource Tree - Pod Running](assets/images/argo-resource-tree.png)
 ![FreshBite Live on EKS Public URL](assets/images/app-eks-public.png)
-![FreshBite Live on EKS Public URL](assets/images/app-eks-public-2.png)
 ![App Pods Running on EKS](assets/images/eks-pods-running.png)
-## Next Phases
-- Phase 6: Prometheus + Grafana monitoring
-- Phase 7: Cost cleanup scripts, final architecture diagram, demo video
+
+## Phase 6 – Monitoring with Prometheus + Grafana
+- Installed kube-prometheus-stack via Helm in monitoring namespace
+- Port-forward Grafana UI
+- Imported dashboards: Node Exporter Full, Kubernetes Cluster Monitoring, Pod Metrics
+- Verified real-time metrics for nodes, cluster, and FreshBite pod (CPU, memory, etc.)
+
+![Grafana Login & Home](assets/images/grafana-login.png)
+![Node Exporter Dashboard - Node Metrics](assets/images/grafana-nodes.png)
+![Kubernetes Cluster Monitoring Dashboard](assets/images/grafana-cluster.png)
+![FreshBite Pod Metrics (CPU/Quota)](assets/images/grafana-pod-freshbite.png)
 
 ## Tech Stack Summary
 - Frontend: Vite, React 18, TypeScript, Tailwind, shadcn/ui
@@ -102,3 +96,4 @@ Automated on push/PR to main:
 - Security: SonarCloud, OWASP Dependency-Check, Trivy, Docker Scout
 - Orchestration: Kubernetes, Minikube (local), AWS EKS (cloud)
 - GitOps: Argo CD
+- Monitoring: Prometheus, Grafana
